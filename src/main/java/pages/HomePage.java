@@ -6,7 +6,7 @@ public class HomePage {
 
     public static final String HOMEPAGE_URL = "https://www.bestbuy.com/";
     private static String accountBtn = "button[data-lid='hdr_signin']";
-    private static String createAccountBtn = "div.header-guest-user a.create-account-btn";
+
     private final Page page;
 
     public HomePage(Page page) {
@@ -18,8 +18,7 @@ public class HomePage {
         return this;
     }
 
-    public AccountNavigationPage openAccountPage() {
+    public void openAccountPage() {
         page.locator(accountBtn).click();
-        return new AccountNavigationPage(page);
     }
 }

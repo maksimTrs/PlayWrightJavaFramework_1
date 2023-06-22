@@ -9,9 +9,10 @@ public class SignupTest extends PlaywrightRunner {
     @Test
     public void signUpTest() {
         homePage.navigate()
-                .openAccountPage()
-                .accountNavigateTo(CREATE_ACCOUNT);
+                .openAccountPage();
 
+
+        accountNavigationPage.accountNavigateTo(CREATE_ACCOUNT);
         createAccountPage
                 .fillFirstAndLastNameFields("Firstname", "Second-Name")
                 .fillPasswordFields("1qazXSW@", "1qazXSW@")

@@ -1,14 +1,17 @@
 package tests;
 
+import annotations.PlayWrightPage;
 import com.microsoft.playwright.*;
-import com.microsoft.playwright.options.Geolocation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import pages.AccountNavigationPage;
 import pages.CreateAccountPage;
 import pages.HomePage;
 
 import java.awt.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class PlaywrightRunner {
@@ -16,8 +19,12 @@ public class PlaywrightRunner {
     protected Page page;
     protected BrowserContext browserContext;
     protected Browser browser;
+    @PlayWrightPage
     protected HomePage homePage;
+    @PlayWrightPage
     protected CreateAccountPage createAccountPage;
+    @PlayWrightPage
+    protected AccountNavigationPage accountNavigationPage;
 
 
     @BeforeAll
@@ -26,7 +33,7 @@ public class PlaywrightRunner {
     }
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IllegalAccessException {
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -35,11 +42,25 @@ public class PlaywrightRunner {
 
         browserContext = browser.newContext(new Browser.NewContextOptions()
                 .setViewportSize(width, height)
-                .setGeolocation(new Geolocation(-33.8571197, 151.2138464))
+                //  .setGeolocation(new Geolocation(-33.8571197, 151.2138464))
                 .setPermissions(List.of("geolocation")));
         page = browserContext.newPage();
-        homePage = new HomePage(page);
+
+/*        homePage = new HomePage(page);
         createAccountPage = new CreateAccountPage(page);
+        accountNavigationPage = new AccountNavigationPage(page);*/
+
+        Class<?> superclass = this.getClass().getSuperclass();
+        for (Field field : superclass.getDeclaredFields()) {
+            if (field.isAnnotationPresent(PlayWrightPage.class)) {
+                Class<?>[] pageClass = {Page.class};
+                try {
+                    field.set(this, field.getType().getConstructor(pageClass).newInstance(page));
+                } catch (InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+                    throw new RuntimeException("!!! +++ Constructor for PO objects wasn't created for field: " + field.getName() + " +++ !!!\n" +  e);
+                }
+            }
+        }
     }
 
     @AfterEach
