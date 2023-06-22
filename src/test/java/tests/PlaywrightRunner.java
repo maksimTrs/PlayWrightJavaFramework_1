@@ -46,21 +46,10 @@ public class PlaywrightRunner {
                 .setPermissions(List.of("geolocation")));
         page = browserContext.newPage();
 
-/*        homePage = new HomePage(page);
-        createAccountPage = new CreateAccountPage(page);
-        accountNavigationPage = new AccountNavigationPage(page);*/
+        initPages(this, page);
 
-        Class<?> superclass = this.getClass().getSuperclass();
-        for (Field field : superclass.getDeclaredFields()) {
-            if (field.isAnnotationPresent(PlayWrightPage.class)) {
-                Class<?>[] pageClass = {Page.class};
-                try {
-                    field.set(this, field.getType().getConstructor(pageClass).newInstance(page));
-                } catch (InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-                    throw new RuntimeException("!!! +++ Constructor for PO objects wasn't created for field: " + field.getName() + " +++ !!!\n" +  e);
-                }
-            }
-        }
+/*      homePage = new HomePage(page);
+        createAccountPage = new CreateAccountPage(page);*/
     }
 
     @AfterEach
@@ -69,6 +58,20 @@ public class PlaywrightRunner {
         browser.close();
         homePage = null;
         createAccountPage = null;
+    }
+
+    private void initPages(Object obj, Page page) {
+        Class<?> superclass = obj.getClass().getSuperclass();
+        for (Field field : superclass.getDeclaredFields()) {
+            if (field.isAnnotationPresent(PlayWrightPage.class)) {
+                Class<?>[] pageClass = {Page.class};
+                try {
+                    field.set(this, field.getType().getConstructor(pageClass).newInstance(page));
+                } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+                    throw new RuntimeException("!!! +++ Constructor for PO objects wasn't created for field: " + field.getName() + " +++ !!!\n" + e);
+                }
+            }
+        }
     }
 }
 
