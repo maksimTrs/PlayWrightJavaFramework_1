@@ -4,11 +4,10 @@ import com.microsoft.playwright.Page;
 
 public class HomePage {
 
-    private final Page page;
-
     public static final String HOMEPAGE_URL = "https://www.bestbuy.com/";
     private static String accountBtn = "button[data-lid='hdr_signin']";
     private static String createAccountBtn = "div.header-guest-user a.create-account-btn";
+    private final Page page;
 
     public HomePage(Page page) {
         this.page = page;

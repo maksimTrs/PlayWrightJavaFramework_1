@@ -7,8 +7,6 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class CreateAccountPage {
 
-    private final Page page;
-
     private static String firstName = "input#firstName";
     private static String lastName = "input#lastName";
     private static String password = "input#fld-p1";
@@ -19,6 +17,7 @@ public class CreateAccountPage {
     private static String passwordMessage = ".c-input-error-message";
     private static String createAccountButton = "button.cia-form__controls__submit";
     private static String createAccountHeader = "//div/h1";
+    private final Page page;
 
 
     public CreateAccountPage(Page page) {

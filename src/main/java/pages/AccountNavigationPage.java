@@ -4,10 +4,9 @@ import com.microsoft.playwright.Page;
 
 public class AccountNavigationPage {
 
-    private final Page page;
-
     private static String accountBtn = "button[data-lid='hdr_signin']";
     private static String accountWindowMenu = "//div[@class='account-menu']//a[text()='%s']";
+    private final Page page;
 
     public AccountNavigationPage(Page page) {
         this.page = page;

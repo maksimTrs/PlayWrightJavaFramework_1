@@ -12,10 +12,10 @@ import java.awt.*;
 import java.util.List;
 
 public class PlaywrightRunner {
+    protected static Playwright playwright;
     protected Page page;
     protected BrowserContext browserContext;
     protected Browser browser;
-    protected static Playwright playwright;
     protected HomePage homePage;
     protected CreateAccountPage createAccountPage;
 

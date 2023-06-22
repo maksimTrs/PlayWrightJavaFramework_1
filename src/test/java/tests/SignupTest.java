@@ -1,9 +1,8 @@
 package tests;
 
 import org.junit.jupiter.api.Test;
-import pages.AccountPartitions;
 
-import static pages.AccountPartitions.*;
+import static pages.AccountPartitions.CREATE_ACCOUNT;
 
 public class SignupTest extends PlaywrightRunner {
 
