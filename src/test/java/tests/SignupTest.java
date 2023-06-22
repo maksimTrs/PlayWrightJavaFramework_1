@@ -1,6 +1,9 @@
 package tests;
 
 import org.junit.jupiter.api.Test;
+import pages.AccountPartitions;
+
+import static pages.AccountPartitions.*;
 
 public class SignupTest extends PlaywrightRunner {
 
@@ -8,7 +11,7 @@ public class SignupTest extends PlaywrightRunner {
     public void signUpTest() {
         homePage.navigate()
                 .openAccountPage()
-                .accountNavigateTo("Create Account");
+                .accountNavigateTo(CREATE_ACCOUNT);
 
         createAccountPage
                 .fillFirstAndLastNameFields("Firstname", "Second-Name")

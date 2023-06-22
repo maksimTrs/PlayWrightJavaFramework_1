@@ -13,8 +13,8 @@ public class AccountNavigationPage {
         this.page = page;
     }
 
-    public void accountNavigateTo(String accountPartition) {
-        page.locator(String.format(accountWindowMenu, accountPartition)).click();
+    public void accountNavigateTo(AccountPartitions accountPartition) {
+        page.locator(String.format(accountWindowMenu, accountPartition.getDisplayName())).click();
     }
 
 }
