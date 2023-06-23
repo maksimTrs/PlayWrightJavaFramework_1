@@ -33,7 +33,7 @@ public class PlaywrightRunner {
     }
 
     @BeforeEach
-    public void setUp() throws IllegalAccessException {
+    public void setUp() {
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -67,7 +67,8 @@ public class PlaywrightRunner {
                 Class<?>[] pageClass = {Page.class};
                 try {
                     field.set(this, field.getType().getConstructor(pageClass).newInstance(page));
-                } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+                } catch (IllegalAccessException | InstantiationException | InvocationTargetException |
+                         NoSuchMethodException e) {
                     throw new RuntimeException("!!! +++ Constructor for PO objects wasn't created for field: " + field.getName() + " +++ !!!\n" + e);
                 }
             }

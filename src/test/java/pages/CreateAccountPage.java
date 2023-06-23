@@ -2,8 +2,7 @@ package pages;
 
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.assertions.LocatorAssertions;
-
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import com.microsoft.playwright.assertions.PlaywrightAssertions;
 
 public class CreateAccountPage {
 
@@ -50,17 +49,17 @@ public class CreateAccountPage {
     }
 
     public void validatePasswordMessage(String passwordMessage1) {
-        assertThat(page.locator(passwordMessage))
+        PlaywrightAssertions.assertThat(page.locator(passwordMessage))
                 .hasText(passwordMessage1, new LocatorAssertions.HasTextOptions().setTimeout(1000));
     }
 
     public void validateCreateAccountButton() {
-        assertThat(page.locator(createAccountButton))
+        PlaywrightAssertions.assertThat(page.locator(createAccountButton))
                 .isEnabled();
     }
 
     public void validateCreateAccountHeader(String createAccountHeader1) {
-        assertThat(page.locator(createAccountHeader))
+        PlaywrightAssertions.assertThat(page.locator(createAccountHeader))
                 .hasText(createAccountHeader1);
     }
 }
