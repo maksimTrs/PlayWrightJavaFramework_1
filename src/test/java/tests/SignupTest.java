@@ -23,4 +23,23 @@ public class SignupTest extends PlaywrightRunner {
         createAccountPage.validateCreateAccountButton();
         createAccountPage.validateCreateAccountHeader("Create an Account");
     }
+
+
+    @Test
+    public void signUpTest2() {
+        homePage.navigate()
+                .openAccountPage();
+
+
+        accountNavigationPage.accountNavigateTo(CREATE_ACCOUNT);
+        createAccountPage
+                .fillFirstAndLastNameFields("Firstname", "Second-Name")
+                .fillPasswordFields("1qazXSW@", "1qazXSW@")
+                .fillEmailField("alex@example.com")
+                .fillMobileField("7232432432");
+
+        createAccountPage.validatePasswordMessage("Your passwords match!111");
+        createAccountPage.validateCreateAccountButton();
+        createAccountPage.validateCreateAccountHeader("Create an Account");
+    }
 }

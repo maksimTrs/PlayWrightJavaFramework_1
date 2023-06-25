@@ -3,24 +3,30 @@ package tests;
 import annotations.PlayWrightPage;
 import com.microsoft.playwright.*;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import pages.AccountNavigationPage;
 import pages.CreateAccountPage;
 import pages.HomePage;
 import pages.SignInPage;
+import services.TestsWatcher;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
+
+@ExtendWith(TestsWatcher.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlaywrightRunner {
-    protected static Playwright playwright;
+    protected Playwright playwright;
     protected Page page;
     protected BrowserContext browserContext;
     protected Browser browser;
@@ -39,7 +45,8 @@ public class PlaywrightRunner {
         //playwright = Playwright.create();
         try {
             FileUtils.deleteDirectory(new File("videos"));
-            System.out.println("Folder deleted successfully.");
+            FileUtils.deleteDirectory(new File("traces"));
+            System.out.println("Folders [videos, traces] were deleted successfully.");
         } catch (IOException e) {
             System.err.println("Failed to delete folder: " + e.getMessage());
         }
@@ -47,12 +54,8 @@ public class PlaywrightRunner {
         Path path = FileSystems.getDefault().getPath("//target/allure-results");
         try {
             Files.deleteIfExists(path);
-        } catch (NoSuchFileException x) {
+        } catch (IOException x) {
             System.err.format("%s: no such" + " file or directory%n", path);
-        } catch (DirectoryNotEmptyException x) {
-            System.err.format("%s not empty%n", path);
-        } catch (IOException ix) {
-            ix.printStackTrace();
         }
     }
 
@@ -60,7 +63,7 @@ public class PlaywrightRunner {
     public void setUp() {
         playwright = Playwright.create();
         // browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-        browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true));
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) screenSize.getWidth();
@@ -78,7 +81,7 @@ public class PlaywrightRunner {
         browserContext.tracing().start(new Tracing.StartOptions()
                 .setScreenshots(true)
                 .setSnapshots(true)
-                .setSources(true));
+                .setSources(false));
 
         page = browserContext.newPage();
         //  page.setDefaultTimeout(40000);
@@ -90,9 +93,9 @@ public class PlaywrightRunner {
     }
 
     @AfterEach
-    public void tearDown() {
+    public void tearDown(TestInfo testInfo) {
         browserContext.tracing().stop(new Tracing.StopOptions()
-                .setPath(Paths.get("trace.zip")));
+                .setPath(Paths.get("traces/" + testInfo.getDisplayName().replace("()", "") + ".zip")));
 
         browserContext.close();
         browser.close();
